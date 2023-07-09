@@ -97,11 +97,15 @@ class EnigmaM3:
     def encrypt_text(self, text):
         text = text.upper()
         encrypted_text = ''
-        
+
         for char in text:
-            encrypted_text += self.encrypt(char)
-        
+            if char == ' ':
+                encrypted_text += ' '
+            else:
+                encrypted_text += self.encrypt(char)
+
         return encrypted_text
+
     
     def decrypt_text(self, text):
         text = text.upper()
@@ -123,37 +127,3 @@ class EnigmaM3:
         for char1, char2 in self.plugboard.items():
             print(f"{char1}-{char2}")
 
-# Inisialisasi Enigma dengan konfigurasi rotor dan posisi awal rotor
-# rotor_config = {
-#     'I': 'EKMFLGDQVZNTOWYHXUSPAIBRCJ',
-#     'II': 'AJDKSIRUXBLHWTMCQGZNPYFVOE',
-#     'III': 'BDFHJLCPRTXVZNYEIWGAKMUSQO'
-# }
-
-# rotor_positions = {
-#     'I': 'A',
-#     'II': 'A',
-#     'III': 'A'
-# }
-
-# enigma = EnigmaM3(rotor_config, rotor_positions, rotor_positions)
-
-# # Set posisi awal rotor
-# initial_positions = {
-#     'I': 'A',
-#     'II': 'A',
-#     'III': 'Z'
-# }
-
-# enigma.set_initial_position(initial_positions)
-
-# # Enkripsi teks
-# plaintext = "A"
-# encrypted_text = enigma.encrypt_text(plaintext)
-# print("Teks terenkripsi:", encrypted_text)
-# print("="*50)
-# enigma = EnigmaM3(rotor_config, rotor_positions, rotor_positions)
-# enigma.set_initial_position(initial_positions)
-# # Dekripsi teks
-# decrypted_text = enigma.decrypt_text(encrypted_text)
-# print("Teks terdekripsi:", decrypted_text)

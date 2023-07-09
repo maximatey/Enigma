@@ -189,7 +189,7 @@ while True:
         intext = input().upper()
         
         for char in intext:
-            if char not in alphabet:
+            if char not in alphabet and char != ' ':
                 valid = False
         
         while not valid:
@@ -200,7 +200,7 @@ while True:
             valid = True
             
             for char in intext:
-                if char not in alphabet:
+                if char not in alphabet and char != ' ':
                     valid = False
                     
         print("Encrypting: " + intext)
