@@ -17,7 +17,6 @@ rotor_positions = {
 
 enigma = EnigmaM3(rotor_config, rotor_positions, rotor_positions)
 
-# Set posisi awal rotor
 initial_positions = {
     'I': 'A',
     'II': 'A',
@@ -25,17 +24,6 @@ initial_positions = {
 }
 
 enigma.set_initial_position(initial_positions)
-
-# # Enkripsi teks
-# plaintext = "A"
-# encrypted_text = enigma.encrypt_text(plaintext)
-# print("Teks terenkripsi:", encrypted_text)
-
-# enigma = EnigmaM3(rotor_config, rotor_positions, rotor_positions)
-# enigma.set_initial_position(initial_positions)
-# # Dekripsi teks
-# decrypted_text = enigma.decrypt_text(encrypted_text)
-# print("Teks terdekripsi:", decrypted_text)
 
 print("Welcome to Virtual Enigma Machine!")
 print("Catatan : Karena enkripsi dan dekripsi mesin enigma melewati proses yang sama, gunakan opsi 2 atau 3 untuk melakukan enkripsi dan/atau dekripsi.")
@@ -76,24 +64,24 @@ while True:
                 elif opsiUbahRotor == '1':
                     print(rotorListText)
                     opsiGear = input("Pilihan (I/II/III): ")
-                    while not (opsiGear != 'I' or opsiGear != 'II' or opsiGear != 'III'):
+                    while opsiGear not in ['I','II','III']:
                         print("Invalid input, silahkan input kembali")
                         opsiGear = input("Pilihan: ")
-                    enigma.set_rotor('I', rotor_config[opsiGear])
+                    enigma.set_rotor('I', opsiGear)
                 elif opsiUbahRotor == '2':
                     print(rotorListText)
                     opsiGear = input("Pilihan (I/II/III): ")
-                    while not (opsiGear != 'I' or opsiGear != 'II' or opsiGear != 'III'):
+                    while opsiGear not in ['I','II','III']:
                         print("Invalid input, silahkan input kembali")
                         opsiGear = input("Pilihan: ")
-                    enigma.set_rotor('II', rotor_config[opsiGear])
+                    enigma.set_rotor('II', opsiGear)
                 elif opsiUbahRotor == '3':
                     print(rotorListText)
                     opsiGear = input("Pilihan (I/II/III): ")
-                    while not (opsiGear != 'I' or opsiGear != 'II' or opsiGear != 'III'):
+                    while opsiGear not in ['I','II','III']:
                         print("Invalid input, silahkan input kembali")
                         opsiGear = input("Pilihan: ")
-                    enigma.set_rotor('III', rotor_config[opsiGear])
+                    enigma.set_rotor('III', opsiGear)
                 else:
                     print("Invalid Input!")
             elif settingOption == '2':

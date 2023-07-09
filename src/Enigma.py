@@ -11,7 +11,15 @@ class EnigmaM3:
             'J': 'X', 'K': 'N', 'L': 'G', 'M': 'O', 'N': 'K', 'O': 'M', 'P': 'I', 'Q': 'E', 'R': 'B',
             'S': 'F', 'T': 'Z', 'U': 'C', 'V': 'W', 'W': 'V', 'X': 'J', 'Y': 'A', 'Z': 'T'
         }
+        self.rotor_config_default = {
+            'I': 'EKMFLGDQVZNTOWYHXUSPAIBRCJ',
+            'II': 'AJDKSIRUXBLHWTMCQGZNPYFVOE',
+            'III': 'BDFHJLCPRTXVZNYEIWGAKMUSQO'
+        }
         self.turnovers = {
+            'I': 'Q', 'II': 'E', 'III': 'V'
+        }
+        self.turnover_default = {
             'I': 'Q', 'II': 'E', 'III': 'V'
         }
         self.plugboard = {}
@@ -36,7 +44,6 @@ class EnigmaM3:
         
         char = self.plugboard.get(char, char)
         print("Enkripsi Plugboard: " + char)
-        
         char = self.rotors['III'][(self.alphabet.index(char) + self.alphabet.index(self.position['III'])) % 26]
         print("Enkripsi rotor kanan: " + char)
         char = self.rotors['II'][(self.alphabet.index(char) + self.alphabet.index(self.position['II'])) % 26]
@@ -119,8 +126,9 @@ class EnigmaM3:
     def get_rotor(self, id):
         return self.rotors[id]
     
-    def set_rotor(self, rotor_id, rotor_string):
-        self.rotors[rotor_id] = rotor_string
+    def set_rotor(self, rotor_id, rotor_target):
+        self.rotors[rotor_id] = self.rotor_config_default[rotor_target]
+        self.turnovers[rotor_id] = self.turnover_default[rotor_target]
         
     def print_plugboard(self):
         print("Plugboard Configuration:")
