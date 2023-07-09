@@ -15,7 +15,14 @@ rotor_positions = {
     'III': 'A'
 }
 
-enigma = EnigmaM3(rotor_config, rotor_positions, rotor_positions)
+ring_positions = {
+    'I': 'A',
+    'II': 'A',
+    'III': 'A'
+}
+
+
+enigma = EnigmaM3(rotor_config, rotor_positions, ring_positions)
 
 initial_positions = {
     'I': 'A',
@@ -32,7 +39,7 @@ print("=" * 50)
 option = -1
 settingOption = -1
 optionText = "Pilih Nomor Opsi yang ingin digunakan! (1/2/3) \n1. Setting Mesin\n2. Input per huruf\n3. Input kalimat\n999. Keluar"
-settingText = "1. Setting rotor\n2. Setting plugboard\n3. Setting Rotor Position\n999. Kembali"
+settingText = "1. Setting rotor\n2. Setting plugboard\n3. Setting Rotor Position\n4. Ring Setting\n999. Kembali"
 rotorListText = "Berikut list rotor yang tersedia:\n1. Rotor I : EKMFLGDQVZNTOWYHXUSPAIBRCJ \n2. Rotor II : AJDKSIRUXBLHWTMCQGZNPYFVOE\n3. Rotor III: BDFHJLCPRTXVZNYEIWGAKMUSQO"
 while True:
     option = -1
@@ -45,6 +52,7 @@ while True:
     print()
     enigma.print_positions()
     print()
+    enigma.print_rings()
     
     print(optionText)
     option = input("Pilihan: ")
@@ -146,6 +154,37 @@ while True:
                     print("\nRotor III has set to position "  + poschar + "\n")
                 else :
                     print("Invalid input!")
+            elif settingOption == '4':
+                enigma.print_rings()
+                print("Pilihan (1/2/3)")
+                posOption = input()
+                if posOption == '1':
+                    print("Pilih posisi ring rotor (A-Z) :")
+                    poschar = input().upper()
+                    while poschar not in alphabet:
+                        print("Invalid Input!")
+                        print("Pilih posisi ring rotor (A-Z) :")
+                        poschar = input().upper()
+                    enigma.set_ring('I',poschar)
+                    print("\nRotor I Ring has set to position "  + poschar + "\n")
+                elif posOption == '2':
+                    print("Pilih posisi ring rotor (A-Z) :")
+                    poschar = input().upper()
+                    while poschar not in alphabet:
+                        print("Invalid Input!")
+                        print("Pilih posisi ring rotor (A-Z) :")
+                        poschar = input().upper()
+                    enigma.set_ring('II',poschar)
+                    print("\nRotor II Ring has set to position "  + poschar + "\n")
+                elif posOption == '3':
+                    print("Pilih posisi ring rotor (A-Z) :")
+                    poschar = input().upper()
+                    while poschar not in alphabet:
+                        print("Invalid Input!")
+                        print("Pilih posisi ring rotor (A-Z) :")
+                        poschar = input().upper()
+                    enigma.set_ring('III',poschar)
+                    print("\nRotor III Ring has set to position "  + poschar + "\n")
             elif settingOption == '999':
                 break
             else:

@@ -22,9 +22,15 @@ class EnigmaM3:
         self.turnover_default = {
             'I': 'Q', 'II': 'E', 'III': 'V'
         }
+        self.reverse_wire = {}
+        self.reverse_wire['I'] =  [0] * 26
+        self.reverse_wire['II'] = [0] * 26
+        self.reverse_wire['III'] = [0] * 26
         self.plugboard = {}
         for rotor, wiring in rotor_config.items():
             self.rotors[rotor] = wiring
+            for i in range(0,len(wiring)):
+                self.reverse_wire[rotor][self.alphabet.index(self.rotors[rotor][i])] = self.alphabet[i]
         
     def rotate(self):
         self.position['III'] = self.alphabet[(self.alphabet.index(self.position['III']) + 1) % 26]
@@ -44,19 +50,19 @@ class EnigmaM3:
         
         char = self.plugboard.get(char, char)
         print("Enkripsi Plugboard: " + char)
-        char = self.rotors['III'][(self.alphabet.index(char) + self.alphabet.index(self.position['III'])) % 26]
+        char = self.alphabet[(self.alphabet.index(self.rotors['III'][(self.alphabet.index(char) + self.alphabet.index(self.position['III']) - self.alphabet.index(self.rings['III'])) % 26]) - (self.alphabet.index(self.position['III']) - self.alphabet.index(self.rings['III']))) % 26]
         print("Enkripsi rotor kanan: " + char)
-        char = self.rotors['II'][(self.alphabet.index(char) + self.alphabet.index(self.position['II'])) % 26]
+        char = self.alphabet[(self.alphabet.index(self.rotors['II'][(self.alphabet.index(char) + self.alphabet.index(self.position['II']) - self.alphabet.index(self.rings['II'])) % 26]) - (self.alphabet.index(self.position['II']) - self.alphabet.index(self.rings['II']))) % 26]
         print("Enkripsi rotor tengah: " + char)
-        char = self.rotors['I'][(self.alphabet.index(char) + self.alphabet.index(self.position['I'])) % 26]
+        char = self.alphabet[(self.alphabet.index(self.rotors['I'][(self.alphabet.index(char) + self.alphabet.index(self.position['I']) - self.alphabet.index(self.rings['I'])) % 26]) - (self.alphabet.index(self.position['I']) - self.alphabet.index(self.rings['I']))) % 26]
         print("Enkripsi rotor kiri: " + char)
         char = self.reflector[char]
         print("Enkripsi reflector: " + char)
-        char = self.alphabet[(self.rotors['I'].index(char) - self.alphabet.index(self.position['I'])) % 26]
+        char = self.alphabet[(self.alphabet.index(self.reverse_wire['I'][(self.alphabet.index(char) + self.alphabet.index(self.position['I']) - self.alphabet.index(self.rings['I'])) % 26]) - (self.alphabet.index(self.position['I']) - self.alphabet.index(self.rings['I']))) % 26]
         print("Enkripsi rotor kiri: " + char)
-        char = self.alphabet[(self.rotors['II'].index(char) - self.alphabet.index(self.position['II'])) % 26]
+        char = self.alphabet[(self.alphabet.index(self.reverse_wire['II'][(self.alphabet.index(char) + self.alphabet.index(self.position['II']) - self.alphabet.index(self.rings['II'])) % 26]) - (self.alphabet.index(self.position['II']) - self.alphabet.index(self.rings['II']))) % 26]
         print("Enkripsi rotor tengah: " + char)
-        char = self.alphabet[(self.rotors['III'].index(char) - self.alphabet.index(self.position['III'])) % 26]
+        char = self.alphabet[(self.alphabet.index(self.reverse_wire['III'][(self.alphabet.index(char) + self.alphabet.index(self.position['III']) - self.alphabet.index(self.rings['III'])) % 26]) - (self.alphabet.index(self.position['III']) - self.alphabet.index(self.rings['III']))) % 26]
         print("Enkripsi rotor kanan: " + char)
         char = self.plugboard.get(char, char)
         print("Enkripsi Plugboard: " + char)
@@ -66,6 +72,9 @@ class EnigmaM3:
     
     def set_rotor_position(self, rotor, position):
         self.position[rotor] = position
+    
+    def set_ring(self, rotor, position):
+        self.rings[rotor] = position
     
     def set_ring_setting(self, rotor, setting):
         self.rings[rotor] = setting
@@ -85,6 +94,15 @@ class EnigmaM3:
         print("1. Left Rotor: " + self.position['I'])
         print("2. Middle Rotor: " + self.position['II'])
         print("3. Right Rotor: " + self.position['III'])
+        print()
+        
+    def print_rings(self):
+        print()
+        print("Current Rotor Ring Positions:")
+        
+        print("1. Left Rotor: " + self.rings['I'])
+        print("2. Middle Rotor: " + self.rings['II'])
+        print("3. Right Rotor: " + self.rings['III'])
         print()
             
     def remove_plug(self, char):
@@ -129,6 +147,9 @@ class EnigmaM3:
     def set_rotor(self, rotor_id, rotor_target):
         self.rotors[rotor_id] = self.rotor_config_default[rotor_target]
         self.turnovers[rotor_id] = self.turnover_default[rotor_target]
+        for i in range(0,len(self.turnover_default[rotor_target])):
+            self.reverse_wire[rotor_id][self.alphabet.index(self.rotors[rotor_id][i])] = self.alphabet[i]
+            
         
     def print_plugboard(self):
         print("Plugboard Configuration:")
