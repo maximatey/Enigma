@@ -1,6 +1,6 @@
 from Enigma import EnigmaM3
 import string
-
+from Enigma import decryptor
 rotor_config = {
     'I': 'EKMFLGDQVZNTOWYHXUSPAIBRCJ',
     'II': 'AJDKSIRUXBLHWTMCQGZNPYFVOE',
@@ -38,7 +38,7 @@ print("=" * 50)
 
 option = -1
 settingOption = -1
-optionText = "Pilih Nomor Opsi yang ingin digunakan! (1/2/3) \n1. Setting Mesin\n2. Input per huruf\n3. Input kalimat\n999. Keluar"
+optionText = "Pilih Nomor Opsi yang ingin digunakan! (1/2/3) \n1. Setting Mesin\n2. Input per huruf\n3. Input kalimat\n4. Decrypt String Only (Brute Force)\n999. Keluar"
 settingText = "1. Setting rotor\n2. Setting plugboard\n3. Setting Rotor Position\n4. Ring Setting\n999. Kembali"
 rotorListText = "Berikut list rotor yang tersedia:\n1. Rotor I : EKMFLGDQVZNTOWYHXUSPAIBRCJ \n2. Rotor II : AJDKSIRUXBLHWTMCQGZNPYFVOE\n3. Rotor III: BDFHJLCPRTXVZNYEIWGAKMUSQO"
 while True:
@@ -234,6 +234,35 @@ while True:
         outtext = enigma.encrypt_text(intext)
         print("Output: " + outtext)
         print()
+    elif option == '4':
+        print("Decrypting String (Text before encryption beginning with \"HELLOSUDO\" ONLY) with brute force method (NOTE: This does not include ring setting and plugboards)")
+        print("Metode ini memeriksa secara traversal dari rotor I,II,III pada 3 slot rotor, kemudian posisi rotor (A-Z) dari ketiga rotor. Jadi waspada jika config enkripsi menggunakan gear II atau III pada rotor kiri, bisa memakan waktu lebih lama.")
+        print("Input text (999 untuk kembali):")
+        intext = ""
+        outtext = ""
+        valid = True
+        intext = input().upper()
+        
+        for char in intext:
+            if char not in alphabet and char != ' ':
+                valid = False
+        
+        while not valid:
+            print("Invalid input")
+            print()
+            print("Input kalimat yang ingin dienkripsi/dekripsi")
+            intext = input().upper
+            valid = True
+            
+            for char in intext:
+                if char not in alphabet and char != ' ':
+                    valid = False
+                    
+        print("Encrypting: " + intext)
+        outtext = decryptor(intext)
+        print("Output: " + outtext)
+        print()
+        
         
     elif option=='999':
         break

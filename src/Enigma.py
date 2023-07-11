@@ -22,14 +22,17 @@ class EnigmaM3:
         self.turnover_default = {
             'I': 'Q', 'II': 'E', 'III': 'V'
         }
+        self.reverse_wire_default = {'I': ['U', 'W', 'Y', 'G', 'A', 'D', 'F', 'P', 'V', 'Z', 'B', 'E', 'C', 'K', 'M', 'T', 'H', 'X', 'S', 'L', 'R', 'I', 'N', 'Q', 'O', 'J'], 
+                                     'II': ['A', 'J', 'P', 'C', 'Z', 'W', 'R', 'L', 'F', 'B', 'D', 'K', 'O', 'T', 'Y', 'U', 'Q', 'G', 'E', 'N', 'H', 'X', 'M', 'I', 'V', 'S'], 
+                                     'III': ['T', 'A', 'G', 'B', 'P', 'C', 'S', 'D', 'Q', 'E', 'U', 'F', 'V', 'N', 'Z', 'H', 'Y', 'I', 'X', 'J', 'W', 'L', 'R', 'K', 'O', 'M']}  
         self.reverse_wire = {}
-        self.reverse_wire['I'] =  [0] * 26
-        self.reverse_wire['II'] = [0] * 26
-        self.reverse_wire['III'] = [0] * 26
+        self.reverse_wire['I'] =  [''] * 26
+        self.reverse_wire['II'] = [''] * 26
+        self.reverse_wire['III'] = [''] * 26
         self.plugboard = {}
         for rotor, wiring in rotor_config.items():
             self.rotors[rotor] = wiring
-            for i in range(0,len(wiring)):
+            for i in range(26):
                 self.reverse_wire[rotor][self.alphabet.index(self.rotors[rotor][i])] = self.alphabet[i]
         
     def rotate(self):
@@ -135,10 +138,13 @@ class EnigmaM3:
     def decrypt_text(self, text):
         text = text.upper()
         decrypted_text = ''
-        
+
         for char in text:
-            decrypted_text += self.encrypt(char)
-        
+            if char == ' ':
+                decrypted_text += ' '
+            else:
+                decrypted_text += self.encrypt(char)
+
         return decrypted_text
     
     def get_rotor(self, id):
@@ -147,12 +153,74 @@ class EnigmaM3:
     def set_rotor(self, rotor_id, rotor_target):
         self.rotors[rotor_id] = self.rotor_config_default[rotor_target]
         self.turnovers[rotor_id] = self.turnover_default[rotor_target]
-        for i in range(0,len(self.turnover_default[rotor_target])):
-            self.reverse_wire[rotor_id][self.alphabet.index(self.rotors[rotor_id][i])] = self.alphabet[i]
+        self.reverse_wire[rotor_id] = self.reverse_wire_default[rotor_target]
             
         
     def print_plugboard(self):
         print("Plugboard Configuration:")
         for char1, char2 in self.plugboard.items():
             print(f"{char1}-{char2}")
+    
+    def set_turnover(self, id,target):
+        self.turnovers[id] = self.turnover_default[target]
 
+def decryptor(ciphertext):
+    # enigma = EnigmaM3({}, {'I': 'A', 'II': 'A', 'III': 'A'}, {'I': 'A', 'II': 'A', 'III': 'A'})
+    decrypted_text = ""
+
+    rotor_config = {
+    'I': 'EKMFLGDQVZNTOWYHXUSPAIBRCJ',
+    'II': 'AJDKSIRUXBLHWTMCQGZNPYFVOE',
+    'III': 'EKMFLGDQVZNTOWYHXUSPAIBRCJ'
+    }
+
+    rotor_positions = {
+        'I': 'A',
+        'II': 'A',
+        'III': 'A'
+    }
+
+    ring_positions = {
+        'I': 'A',
+        'II': 'A',
+        'III': 'A'
+    }
+
+
+    enigma = EnigmaM3(rotor_config, rotor_positions, ring_positions)
+
+    initial_positions = {
+        'I': 'A',
+        'II': 'A',
+        'III': 'A'
+    }
+
+    enigma.set_initial_position(initial_positions)
+    enigma.set_turnover('III','I')
+    
+    for rotor1 in enigma.rotor_config_default.keys(): 
+        for rotor2 in enigma.rotor_config_default.keys():
+            for rotor3 in enigma.rotor_config_default.keys():
+            # rotor3 = 'II'    
+                for pos1 in enigma.alphabet:
+                    for pos2 in enigma.alphabet:
+                        for pos3 in enigma.alphabet:
+                            enigma.set_rotor('I', rotor1)
+                            enigma.set_rotor('II', rotor2)
+                            enigma.set_rotor('III', rotor3)
+                            enigma.set_rotor_position('I', pos1)
+                            enigma.set_rotor_position('II', pos2)
+                            enigma.set_rotor_position('III', pos3)
+                            print(enigma.position)
+                            print(enigma.rotors)
+                            decrypted_text = enigma.decrypt_text(ciphertext[:10])
+                            if decrypted_text.startswith('HELLO SUDO'):
+                                enigma.set_rotor('I', rotor1)
+                                enigma.set_rotor('II', rotor2)
+                                enigma.set_rotor('III', rotor3)
+                                enigma.set_rotor_position('I', pos1)
+                                enigma.set_rotor_position('II', pos2)
+                                enigma.set_rotor_position('III', pos3)
+                                return enigma.decrypt_text(ciphertext)
+                            
+    return "NOT FOUND"
