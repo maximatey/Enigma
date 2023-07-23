@@ -272,11 +272,3 @@ while True:
 
 print()
 print("Sayonara~")
-        
-        
-                
-                
-                    
-                        
-                    
-    

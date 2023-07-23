@@ -163,6 +163,21 @@ class EnigmaM3:
     
     def set_turnover(self, id,target):
         self.turnovers[id] = self.turnover_default[target]
+        
+    def decrypt_opt(self, text):
+        text = text.upper()
+        decrypted_text = ''
+        crib = 'HELLO SUDO'
+        
+        for i in range(len(crib)):
+            if text[i] == ' ':
+                decrypted_text += ' '
+            else:
+                decrypted_text += self.encrypt(text[i])
+            if not(crib.startswith(decrypted_text)):
+                break
+
+        return decrypted_text
 
 def decryptor(ciphertext):
     # enigma = EnigmaM3({}, {'I': 'A', 'II': 'A', 'III': 'A'}, {'I': 'A', 'II': 'A', 'III': 'A'})
@@ -213,7 +228,7 @@ def decryptor(ciphertext):
                             enigma.set_rotor_position('III', pos3)
                             print(enigma.position)
                             print(enigma.rotors)
-                            decrypted_text = enigma.decrypt_text(ciphertext[:10])
+                            decrypted_text = enigma.decrypt_opt(ciphertext[:10])
                             if decrypted_text.startswith('HELLO SUDO'):
                                 enigma.set_rotor('I', rotor1)
                                 enigma.set_rotor('II', rotor2)
