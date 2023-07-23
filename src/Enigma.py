@@ -125,10 +125,10 @@ class EnigmaM3:
     def encrypt_text(self, text):
         text = text.upper()
         encrypted_text = ''
-
+        excl_chars = ' .,\'!?\"-()'
         for char in text:
-            if char == ' ':
-                encrypted_text += ' '
+            if char in excl_chars:
+                encrypted_text += char
             else:
                 encrypted_text += self.encrypt(char)
 
@@ -138,10 +138,11 @@ class EnigmaM3:
     def decrypt_text(self, text):
         text = text.upper()
         decrypted_text = ''
+        excl_chars = ' .,\'!?\"-()'
 
         for char in text:
-            if char == ' ':
-                decrypted_text += ' '
+            if char in excl_chars:
+                decrypted_text += char
             else:
                 decrypted_text += self.encrypt(char)
 
@@ -170,10 +171,10 @@ class EnigmaM3:
         crib = 'HELLO SUDO'
         
         for i in range(len(crib)):
-            if text[i] == ' ':
-                decrypted_text += ' '
-            else:
+            if text[i] in self.alphabet:
                 decrypted_text += self.encrypt(text[i])
+            else:
+                decrypted_text += text[i]
             if not(crib.startswith(decrypted_text)):
                 break
 

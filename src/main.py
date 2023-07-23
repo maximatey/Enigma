@@ -207,7 +207,12 @@ while True:
             elif char == '999':
                 break
             else:
-                print("Invalid input")
+                intext = intext + char
+                outtext = outtext + char
+                print("Output: " + char)
+                print()
+                print("Input text: " + intext)
+                print("Output text: " + outtext)
     elif option == '3':
         intext = ""
         outtext = ""
@@ -215,27 +220,27 @@ while True:
         print("Input kalimat yang ingin dienkripsi/dekripsi")
         intext = input().upper()
         
-        for char in intext:
-            if char not in alphabet and char != ' ':
-                valid = False
+        # for char in intext:
+        #     if char not in alphabet and char != ' ':
+        #         valid = False
         
-        while not valid:
-            print("Invalid input")
-            print()
-            print("Input kalimat yang ingin dienkripsi/dekripsi")
-            intext = input().upper
-            valid = True
+        # while not valid:
+        #     print("Invalid input")
+        #     print()
+        #     print("Input kalimat yang ingin dienkripsi/dekripsi")
+        #     intext = input().upper
+        #     valid = True
             
-            for char in intext:
-                if char not in alphabet and char != ' ':
-                    valid = False
+            # for char in intext:
+            #     if char not in alphabet and char != ' ':
+            #         valid = False
                     
         print("Encrypting: " + intext)
         outtext = enigma.encrypt_text(intext)
         print("Output: " + outtext)
         print()
     elif option == '4':
-        print("Decrypting String (Text before encryption beginning with \"HELLOSUDO\" ONLY) with brute force method (NOTE: This does not include ring setting and plugboards)")
+        print("Decrypting String (Text before encryption beginning with \"HELLO SUDO\" ONLY) with brute force method (NOTE: This does not include ring setting and plugboards)")
         print("Metode ini memeriksa secara traversal dari rotor I,II,III pada 3 slot rotor, kemudian posisi rotor (A-Z) dari ketiga rotor. Jadi waspada jika config enkripsi menggunakan gear II atau III pada rotor kiri, bisa memakan waktu lebih lama.")
         print("Input text (999 untuk kembali):")
         intext = ""
@@ -243,20 +248,20 @@ while True:
         valid = True
         intext = input().upper()
         
-        for char in intext:
-            if char not in alphabet and char != ' ':
-                valid = False
+        # for char in intext:
+        #     if char not in alphabet and char != ' ':
+        #         valid = False
         
-        while not valid:
-            print("Invalid input")
-            print()
-            print("Input kalimat yang ingin dienkripsi/dekripsi")
-            intext = input().upper
-            valid = True
+        # while not valid:
+        #     print("Invalid input")
+        #     print()
+        #     print("Input kalimat yang ingin dienkripsi/dekripsi")
+        #     intext = input().upper
+        #     valid = True
             
-            for char in intext:
-                if char not in alphabet and char != ' ':
-                    valid = False
+        #     for char in intext:
+        #         if char not in alphabet and char != ' ':
+        #             valid = False
                     
         print("Encrypting: " + intext)
         outtext = decryptor(intext)
