@@ -36,11 +36,12 @@ class EnigmaM3:
                 self.reverse_wire[rotor][self.alphabet.index(self.rotors[rotor][i])] = self.alphabet[i]
         
     def rotate(self):
-        self.position['III'] = self.alphabet[(self.alphabet.index(self.position['III']) + 1) % 26]
+        if self.position['II'] == self.turnovers['II']:
+            self.position['I'] = self.alphabet[(self.alphabet.index(self.position['I']) + 1) % 26]
+            self.position['II'] = self.alphabet[(self.alphabet.index(self.position['II']) + 1) % 26]
         if self.position['III'] == self.turnovers['III']:
             self.position['II'] = self.alphabet[(self.alphabet.index(self.position['II']) + 1) % 26]
-            if self.position['II'] == self.turnovers['II']:
-                self.position['I'] = self.alphabet[(self.alphabet.index(self.position['I']) + 1) % 26]
+        self.position['III'] = self.alphabet[(self.alphabet.index(self.position['III']) + 1) % 26]
     
     def encrypt(self, char):
         if char not in self.alphabet:
@@ -73,6 +74,38 @@ class EnigmaM3:
         
         return char
     
+    def encrypt2(self, char):
+        if char not in self.alphabet:
+            return char,""
+        self.rotate()
+        string = ""
+        string += "Current Rotor Position:\nLeft: " + self.position['I'] + "\nMiddle: " + self.position['II'] + "\nRight: " + self.position['III'] + "\n\n"
+        string += "Input character: " + char + "\n"
+        
+        char = self.plugboard.get(char, char)
+        string += "Enkripsi Plugboard: " + char + "\n"
+        char = self.alphabet[(self.alphabet.index(self.rotors['III'][(self.alphabet.index(char) + self.alphabet.index(self.position['III']) - self.alphabet.index(self.rings['III'])) % 26]) - (self.alphabet.index(self.position['III']) - self.alphabet.index(self.rings['III']))) % 26]
+        string += "Enkripsi rotor kanan: " + char + "\n"
+        char = self.alphabet[(self.alphabet.index(self.rotors['II'][(self.alphabet.index(char) + self.alphabet.index(self.position['II']) - self.alphabet.index(self.rings['II'])) % 26]) - (self.alphabet.index(self.position['II']) - self.alphabet.index(self.rings['II']))) % 26]
+        string += "Enkripsi rotor tengah: " + char + "\n"
+        char = self.alphabet[(self.alphabet.index(self.rotors['I'][(self.alphabet.index(char) + self.alphabet.index(self.position['I']) - self.alphabet.index(self.rings['I'])) % 26]) - (self.alphabet.index(self.position['I']) - self.alphabet.index(self.rings['I']))) % 26]
+        string += "Enkripsi rotor kiri: " + char + "\n"
+        char = self.reflector[char]
+        string += "Enkripsi reflector: " + char + "\n"
+        char = self.alphabet[(self.alphabet.index(self.reverse_wire['I'][(self.alphabet.index(char) + self.alphabet.index(self.position['I']) - self.alphabet.index(self.rings['I'])) % 26]) - (self.alphabet.index(self.position['I']) - self.alphabet.index(self.rings['I']))) % 26]
+        string += "Enkripsi rotor kiri: " + char + "\n"
+        char = self.alphabet[(self.alphabet.index(self.reverse_wire['II'][(self.alphabet.index(char) + self.alphabet.index(self.position['II']) - self.alphabet.index(self.rings['II'])) % 26]) - (self.alphabet.index(self.position['II']) - self.alphabet.index(self.rings['II']))) % 26]
+        string += "Enkripsi rotor tengah: " + char + "\n"
+        char = self.alphabet[(self.alphabet.index(self.reverse_wire['III'][(self.alphabet.index(char) + self.alphabet.index(self.position['III']) - self.alphabet.index(self.rings['III'])) % 26]) - (self.alphabet.index(self.position['III']) - self.alphabet.index(self.rings['III']))) % 26]
+        string += "Enkripsi rotor kanan: " + char + "\n"
+        char = self.plugboard.get(char, char)
+        string += "Enkripsi Plugboard: " + char + "\n"
+
+        
+        string += "=" * 20 + "\n"
+        
+        return char,string
+    
     def set_rotor_position(self, rotor, position):
         self.position[rotor] = position
     
@@ -89,6 +122,19 @@ class EnigmaM3:
             print("Plug added: " + char1 + "-" + char2)
         else:
             print("Plug already exists!")
+            
+    def add_plug2(self, char1, char2):
+        if char1 == char2:
+            x = 0
+        elif char1 not in self.plugboard.values() and char2 not in self.plugboard.values():
+            self.plugboard[char1] = char2
+            self.plugboard[char2] = char1
+        else:
+            if char1 in self.plugboard.values():
+                self.remove_plug(char1)
+            if char2 in self.plugboard.values():
+                self.remove_plug(char2)
+            self.add_plug2(char1,char2)
 
     def print_positions(self):
         print()
@@ -113,6 +159,12 @@ class EnigmaM3:
             char2 = self.plugboard[char]
             del self.plugboard[char]
             del self.plugboard[char2]
+            
+    def remove_plug2(self, char1, char2):
+        if (char1 in self.plugboard) and (char2 in self.plugboard):
+            # if self.plugboard[char1] == char2 and self.plugboard[char2]:
+            del self.plugboard[char1]
+            del self.plugboard[char2]
     
     def set_initial_position(self, initial_positions):
         for rotor, position in initial_positions.items():
@@ -134,6 +186,20 @@ class EnigmaM3:
 
         return encrypted_text
 
+    def encrypt_text2(self, text):
+        text = text.upper()
+        encrypted_text = ''
+        encrypted_text_proc = ""
+        excl_chars = ' .,\'!?\"-()'
+        for char in text:
+            if char in self.alphabet:
+                enc_char, enc_proc = self.encrypt2(char)
+                encrypted_text += enc_char
+                encrypted_text_proc += enc_proc
+            else:
+                encrypted_text += char
+
+        return encrypted_text, encrypted_text_proc
     
     def decrypt_text(self, text):
         text = text.upper()
@@ -161,6 +227,14 @@ class EnigmaM3:
         print("Plugboard Configuration:")
         for char1, char2 in self.plugboard.items():
             print(f"{char1}-{char2}")
+            
+    def get_plugboard(self):
+        ret_string = ""
+        for char1, char2 in self.plugboard.items():
+            if self.alphabet.index(char1) < self.alphabet.index(char2):
+                ret_string += char1 + " - " + char2 + "\n"
+            
+        return ret_string
     
     def set_turnover(self, id,target):
         self.turnovers[id] = self.turnover_default[target]
@@ -179,6 +253,9 @@ class EnigmaM3:
                 break
 
         return decrypted_text
+    
+    def get_position(self, rotor):
+        return self.position[rotor]
 
 def decryptor(ciphertext):
     # enigma = EnigmaM3({}, {'I': 'A', 'II': 'A', 'III': 'A'}, {'I': 'A', 'II': 'A', 'III': 'A'})
